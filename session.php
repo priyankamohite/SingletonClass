@@ -139,31 +139,53 @@ echo "<br/>";
 
 
 
+//typecasting
+
+//to boolean
+var_dump((bool)"");
+//o/p : boolean false
+
+var_dump((bool)"0");
+//o/p : boolean false
+
+var_dump((bool)"1");
+//o/p : boolean true
+
+//anything other than 0 converted to boolean will give true
+var_dump((bool)"589709");
+//o/p : boolean true
 
 
+var_dump((bool) "false");
+//o/p : boolean true
+
+var_dump((bool) array(12));
+//o/p : boolean true
+
+var_dump((bool) array());
+//o/p : boolean false
 
 
+//to integer
+var_dump((int)"true");
+//o/p : int 0
 
 
+var_dump((int)(55/2));
+//o/p : int 27
+
+var_dump((float)(55/2));
+//o/p : float 27.5
+
+var_dump((float)(55));
+//o/p : float 27.5
+
+var_dump((string)55);
+//o/p : string '55' (length=2)
 
 
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
+var_dump((string)(55/2));
+//o/p : string '27.5' (length=4)
 
 
 
