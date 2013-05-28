@@ -62,10 +62,7 @@ class MyDBClass{
     function fetchdata($dbh,$mode)
     {
 
-       $select=  MyDBClass::select("*");
-       $from =  MyDBClass::from("users");
-
-        $queryStatement = "select ".$select. " from ".$from.";";
+        $queryStatement = "select ". MyDBClass::select("*"). " from ".MyDBClass::from("users").";";
 
         $sth = $dbh->prepare($queryStatement);
         $sth->execute();
