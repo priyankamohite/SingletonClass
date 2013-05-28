@@ -17,6 +17,10 @@ echo strstr("my name is Priyanka", "Priya",1);
 echo "<br/>";
 //output : my name is
 
+echo strstr("my name is Priyanka Priyanka", "Priya");
+echo "<br/>";
+//output : Priyanka Priyanka
+
 echo strstr("my name is Priyanka", "priya");
 echo "<br/>";
 //output : nothing will display as function is case sensitive
@@ -186,24 +190,5 @@ var_dump((string)55);
 
 var_dump((string)(55/2));
 //o/p : string '27.5' (length=4)
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
 
 
