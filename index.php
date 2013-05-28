@@ -60,6 +60,7 @@ class MyDBClass {
     }
 
 
+
     function fetchdata($dbh) {
 
         $conditions= array('fname'=>'fname9','city'=>'City3');
