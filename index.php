@@ -145,12 +145,7 @@ class MyDBClass {
 
     function save($tableName, $setParameters, $conditions = null) {
 
-        //        print_r($setParameters);
-
         if ($conditions != null) {
-
-            //            UPDATE users SET fname='PRIYA' WHERE fanme= 'Priyanka';
-
 
             $this->query = "UPDATE " . $tableName . " SET ";
 
@@ -170,7 +165,6 @@ class MyDBClass {
             $this->query = "INSERT INTO " . $tableName . " (";
 
             foreach ($setParameters as $key => $setParameter) {
-
                 $this->query = $this->query . $key . ",";
             }
 
@@ -189,8 +183,23 @@ class MyDBClass {
         return $this;
     }
 
-    function delete() {
+    function delete($tableName,$conditions = null) {
 
+        if(isset($tableName) && isset($conditions)){
+
+            $this->query = "DELETE FROM ".$tableName." WHERE ";
+
+            foreach ($conditions as $key => $condition) {
+                $this->query = $this->query . $key . " ='" . $condition . "' AND ";
+            }
+
+            $this->query = substr($this->query, 0, -4) . " ;";
+        }
+
+        $sth = $this->dbh->prepare($this->query);
+        $sth->execute();
+
+        return $this;
     }
 
 }
@@ -208,10 +217,13 @@ $obj = MyDBClass::getInstance();
     ->closeConnection();*/
 
 
-$obj->makeConnection()
+/*$obj->makeConnection()
     ->save("users", array('organisation_id' => '111', 'fname' => 'Priya', 'lname' => 'Mohite', 'city' => 'Islampur'), array('fname' => 'Priyanka', 'lname' => 'Mohite'))
-    ->closeConnection();
+    ->closeConnection();*/
 
+$obj->makeConnection()
+    ->delete("users",array('fname' => 'fname500', 'lname' => 'lname500'))
+    ->closeConnection();
 
 
 
