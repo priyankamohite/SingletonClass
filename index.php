@@ -78,6 +78,9 @@ class MyDBClass {
 
             $this->where = "where " . substr($wherecondition, 0, -4);
         }
+
+        //        echo  $this->where;
+        //        die();
         return $this;
     }
 
@@ -121,13 +124,14 @@ class MyDBClass {
 
             foreach ($results as $result) {
 
-                foreach($result as $key=>$data){
+                foreach ($result as $key => $data) {
 
-                    if(isset($data)){
-                        echo $key."->".$data."      ";
+                    if (isset($data)) {
+                        echo $key . "->" . $data . "      ";
                     }
                 }
-                echo "<br />"; echo "<br />";
+                echo "<br />";
+                echo "<br />";
             }
 
         } else {
@@ -177,11 +181,11 @@ class MyDBClass {
         return $this;
     }
 
-    function delete($tableName,$conditions = null) {
+    function delete($tableName, $conditions = null) {
 
-        if(isset($tableName) && isset($conditions)){
+        if (isset($tableName) && isset($conditions)) {
 
-            $this->query = "DELETE FROM ".$tableName." WHERE ";
+            $this->query = "DELETE FROM " . $tableName . " WHERE ";
 
             foreach ($conditions as $key => $condition) {
                 $this->query = $this->query . $key . " ='" . $condition . "' AND ";
@@ -194,6 +198,14 @@ class MyDBClass {
         $sth->execute();
 
         return $this;
+    }
+
+    function join() {
+        /*SELECT users . fname,organizations . id
+         FROM users
+         INNER JOIN organizations
+         ON users . organisation_id = organizations . id
+         AND organizations . id = 30;*/
     }
 
 }
@@ -232,13 +244,43 @@ $obj = MyDBClass::getInstance();
 
 
 //List 10 organization whose id is greater than 10
+/*$obj->makeConnection()
+    ->select("*")
+    ->from("organizations")
+    ->where(array('id >'=>11))
+    ->limit(10)
+    ->get()
+    ->fetchData()
+    ->closeConnection();*/
+
+
 //List Organization whose id is greater than 10 and less than equal to 50
+/*$obj->makeConnection()
+    ->select("*")
+    ->from("organizations")
+    ->where(array('id >'=>11,'id <'=>50))
+    ->get()
+    ->fetchData()
+    ->closeConnection();*/
+
 //LIst all organization who has bee created after 2013-02-10 00:00:00
+/*$obj->makeConnection()
+    ->select("*")
+    ->from("organizations")
+    ->where(array('created_on >'=>'2013-02-10 00:00:00'))
+    ->get()
+    ->fetchData()
+    ->closeConnection();*/
+
 //List all orders who has id between 10 to 50 and its orders should be descending by name
-
-
-
-
+/*$obj->makeConnection()
+    ->select("*")
+    ->from("organizations")
+    ->where(array('id >'=>10,'id <'=>50))
+    ->orderBy("name", "DESC")
+    ->get()
+    ->fetchData()
+    ->closeConnection();*/
 
 
 //display informations about organization whose id is 70
@@ -265,12 +307,10 @@ $obj = MyDBClass::getInstance();
 //return a count of users per organization with organization name
 
 
-
 //update users table fname = 'abc' and lname = 'xyz' of user whose id is 20
 /*$obj->makeConnection()
     ->save("users", array('fname' => 'abc', 'lname' => 'xyz'), array('id' => 20))
     ->closeConnection();*/
-
 
 
 //delete all users who lives in city "City7"
