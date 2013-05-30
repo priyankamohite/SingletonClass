@@ -3,14 +3,6 @@
 class MyDBClass {
 
     private static $instance;
-    private $dbh;
-    private $select;
-    private $from;
-    private $where;
-    private $limit;
-    private $orderBy;
-    private $query;
-
 
     private function __construct() {
 
@@ -29,36 +21,30 @@ class MyDBClass {
         $password = 'webonise6186';
 
         try {
-            $this->dbh = new PDO("mysql:host=$hostname;dbname=test", $username, $password);
-                        echo 'Connected to database<br />';
+            $dbh = new PDO("mysql:host=$hostname;dbname=test", $username, $password);
+            //            echo 'Connected to database<br />';
+            return $dbh;
         } catch (PDOException $e) {
             echo $e->getMessage();
         }
-
-        return $this;
-
     }
 
     function closeConnection() {
-        $this->dbh = null;
-                echo "Connection closed<br />";
+        $dbh = null;
+        //        echo "Connection closed<br />";
     }
 
-    function select($selectParameters) {
+    function select($select) {
 
-        if (empty($selectParameters) || $selectParameters == NULL) {
+        if (empty($select) || $select == NULL) {
 
-            $this->select = "*";
+            $select = "*";
         }
-
-        return $this;
+        return $select;
     }
 
-    function from($tableName) {
-
-        $this->from=$tableName;
-
-        return $this;
+    function from($from) {
+        return $from;
     }
 
     function where($conditions){
@@ -70,28 +56,20 @@ class MyDBClass {
             $wherecondition =  $wherecondition." ".$key ."='".$condition."' AND ";
         }
 
-        $this->where= substr($wherecondition, 0, -4);
-
-        return  $this;
+        return substr($wherecondition, 0, -4);
     }
 
 
-    function get(){
 
-        $this->query =  "select " . $this->select . " from " . $this->from ." where ".$this->where. ";";
-        return $this;
+    function fetchdata($dbh) {
 
-    }
+        $conditions= array('fname'=>'fname9','city'=>'City3');
 
-    function query(){
+        $queryStatement = "select " . MyDBClass::select("*") . " from " . MyDBClass::from("users") ." where ".MyDBClass::where($conditions). ";";
 
-     return $this;
+        //        echo $queryStatement;
 
-    }
-
-    function fetchdata() {
-
-        $sth = $this->dbh->prepare($this->query);
+        $sth = $dbh->prepare($queryStatement);
         $sth->execute();
 
         $results = $sth->fetchAll(PDO::FETCH_ASSOC);
@@ -110,35 +88,13 @@ class MyDBClass {
         } else {
             echo "data not found";
         }
-
-        return $this;
-    }
-
-    function save(){
-
-    }
-
-    function delete(){
-
     }
 
 }
 
 $obj = MyDBClass::getInstance();
+$dbh = $obj->makeConnection();
 
+$obj->fetchdata($dbh);
 
-$obj->makeConnection()
-    ->select("*")
-    ->from("users")
-    ->where(array('fname'=>'fname9','city'=>'City3'))
-    ->get()
-    ->fetchdata()
-    ->closeConnection();
-
-
-
-
-
-
-
-
+$obj->closeConnection();
