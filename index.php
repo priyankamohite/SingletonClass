@@ -2,7 +2,6 @@
 
 class MyDBClass {
 
-
     private static $instance;
     private $dbh;
     private $select;
@@ -11,7 +10,6 @@ class MyDBClass {
     private $limit;
     private $orderBy;
     private $query;
-
 
     private function __construct() {
 
@@ -38,7 +36,6 @@ class MyDBClass {
         } catch (PDOException $e) {
             echo $e->getMessage();
         }
-
         return $this;
 
     }
@@ -62,56 +59,48 @@ class MyDBClass {
     function from($tableName) {
 
         if (!empty($tableName)) {
-
             $this->from = "from " . $tableName;
-
         } else {
             echo "please give table name";
             die();
         }
-
         return $this;
     }
 
     function where($conditions) {
 
         $wherecondition = NULL;
-
         if (!empty($conditions)) {
 
             foreach ($conditions as $key => $condition) {
-
                 $wherecondition = $wherecondition . " " . $key . "='" . $condition . "' AND ";
             }
 
             $this->where = "where " . substr($wherecondition, 0, -4);
         }
-
         return $this;
     }
 
-    function orderBy($fieldName,$order) {
+    function orderBy($fieldName, $order) {
 
-        if(!empty($order) && !empty($fieldName)){
-            $this->orderBy = "ORDER BY ".$fieldName." ".$order;
+        if (!empty($order) && !empty($fieldName)) {
+            $this->orderBy = "ORDER BY " . $fieldName . " " . $order;
         }
         return $this;
     }
 
-    function limit($noOfRows){
+    function limit($noOfRows) {
 
-        if(!empty($noOfRows)){
-            $this->limit= "LIMIT ".$noOfRows;
+        if (!empty($noOfRows)) {
+            $this->limit = "LIMIT " . $noOfRows;
         }
-
         return $this;
     }
 
 
     function get() {
 
-        $this->query = $this->select . " " . $this->from . " " . $this->where ." ".$this->orderBy." ".$this->limit. ";";
-        //        SELECT * FROM users ORDER BY fname DESC LIMIT 10;
+        $this->query = $this->select . " " . $this->from . " " . $this->where . " " . $this->orderBy . " " . $this->limit . ";";
         return $this;
 
     }
@@ -126,7 +115,6 @@ class MyDBClass {
 
         $sth = $this->dbh->prepare($this->query);
         $sth->execute();
-
         $results = $sth->fetchAll(PDO::FETCH_ASSOC);
 
         if (!empty($results)) {
@@ -155,8 +143,50 @@ class MyDBClass {
         return $this;
     }
 
-    function save() {
+    function save($tableName, $setParameters, $conditions = null) {
 
+        //        print_r($setParameters);
+
+        if ($conditions != null) {
+
+            //            UPDATE users SET fname='PRIYA' WHERE fanme= 'Priyanka';
+
+
+            $this->query = "UPDATE " . $tableName . " SET ";
+
+            foreach ($setParameters as $key => $setParameter) {
+                $this->query = $this->query . $key . " ='" . $setParameter . "',";
+            }
+
+            $this->query = substr($this->query, 0, -1) . " WHERE ";
+
+            foreach ($conditions as $key => $condition) {
+                $this->query = $this->query . $key . " ='" . $condition . "' AND ";
+            }
+
+            $this->query = substr($this->query, 0, -4) . " ;";
+
+        } else {
+            $this->query = "INSERT INTO " . $tableName . " (";
+
+            foreach ($setParameters as $key => $setParameter) {
+
+                $this->query = $this->query . $key . ",";
+            }
+
+            $this->query = substr($this->query, 0, -1) . ") VALUES ('";
+
+            foreach ($setParameters as $key => $setParameter) {
+                $this->query = $this->query . $setParameter . "','";
+            }
+
+            $this->query = substr($this->query, 0, -2) . ");";
+        }
+
+        $sth = $this->dbh->prepare($this->query);
+        $sth->execute();
+
+        return $this;
     }
 
     function delete() {
@@ -167,17 +197,20 @@ class MyDBClass {
 
 $obj = MyDBClass::getInstance();
 
-
-$obj->makeConnection()
+/*$obj->makeConnection()
     ->select("*")
     ->from("users")
     ->where("")
-    ->orderBy("fname","DESC")
+    ->orderBy("fname", "DESC")
     ->limit(10)
     ->get()
     ->fetchData()
-    ->closeConnection();
+    ->closeConnection();*/
 
+
+$obj->makeConnection()
+    ->save("users", array('organisation_id' => '111', 'fname' => 'Priya', 'lname' => 'Mohite', 'city' => 'Islampur'), array('fname' => 'Priyanka', 'lname' => 'Mohite'))
+    ->closeConnection();
 
 
 
