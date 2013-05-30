@@ -53,7 +53,7 @@ class MyDBClass {
         if (empty($selectParameters) || $selectParameters == NULL) {
             $this->select = "select *";
         } else {
-            $this->select = "select ".$selectParameters;
+            $this->select = "select " . $selectParameters;
         }
 
         return $this;
@@ -61,11 +61,11 @@ class MyDBClass {
 
     function from($tableName) {
 
-        if(!empty($tableName)){
+        if (!empty($tableName)) {
 
-            $this->from = "from ".$tableName;
+            $this->from = "from " . $tableName;
 
-        }else{
+        } else {
             echo "please give table name";
             die();
         }
@@ -77,14 +77,31 @@ class MyDBClass {
 
         $wherecondition = NULL;
 
-        if(!empty($conditions)){
+        if (!empty($conditions)) {
 
             foreach ($conditions as $key => $condition) {
 
                 $wherecondition = $wherecondition . " " . $key . "='" . $condition . "' AND ";
             }
 
-            $this->where = "where ".substr($wherecondition, 0, -4);
+            $this->where = "where " . substr($wherecondition, 0, -4);
+        }
+
+        return $this;
+    }
+
+    function orderBy($fieldName,$order) {
+
+        if(!empty($order) && !empty($fieldName)){
+            $this->orderBy = "ORDER BY ".$fieldName." ".$order;
+        }
+        return $this;
+    }
+
+    function limit($noOfRows){
+
+        if(!empty($noOfRows)){
+            $this->limit= "LIMIT ".$noOfRows;
         }
 
         return $this;
@@ -93,7 +110,8 @@ class MyDBClass {
 
     function get() {
 
-        $this->query = $this->select . " " . $this->from . " " . $this->where . ";";
+        $this->query = $this->select . " " . $this->from . " " . $this->where ." ".$this->orderBy." ".$this->limit. ";";
+        //        SELECT * FROM users ORDER BY fname DESC LIMIT 10;
         return $this;
 
     }
@@ -154,6 +172,8 @@ $obj->makeConnection()
     ->select("*")
     ->from("users")
     ->where("")
+    ->orderBy("fname","DESC")
+    ->limit(10)
     ->get()
     ->fetchData()
     ->closeConnection();
