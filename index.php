@@ -121,19 +121,13 @@ class MyDBClass {
 
             foreach ($results as $result) {
 
-                if (isset($result['organisation_id'])) {
-                    echo $result['organisation_id'] . " ";
+                foreach($result as $key=>$data){
+
+                    if(isset($data)){
+                        echo $key."->".$data."      ";
+                    }
                 }
-                if (isset($result['fname'])) {
-                    echo  $result['fname'] . "    ";
-                }
-                if (isset($result['lname'])) {
-                    echo $result['lname'] . " ";
-                }
-                if (isset($result['city'])) {
-                    echo $result['city'] . "   ";
-                }
-                echo "<br />";
+                echo "<br />"; echo "<br />";
             }
 
         } else {
@@ -170,7 +164,7 @@ class MyDBClass {
 
             $this->query = substr($this->query, 0, -1) . ") VALUES ('";
 
-            foreach ($setParameters as $key => $setParameter) {
+            foreach ($setParameters as $setParameter) {
                 $this->query = $this->query . $setParameter . "','";
             }
 
@@ -221,9 +215,69 @@ $obj = MyDBClass::getInstance();
     ->save("users", array('organisation_id' => '111', 'fname' => 'Priya', 'lname' => 'Mohite', 'city' => 'Islampur'), array('fname' => 'Priyanka', 'lname' => 'Mohite'))
     ->closeConnection();*/
 
-$obj->makeConnection()
+/*$obj->makeConnection()
     ->delete("users",array('fname' => 'fname500', 'lname' => 'lname500'))
-    ->closeConnection();
+    ->closeConnection();*/
+
+
+//test cases
+
+//List all organizations
+/*$obj->makeConnection()
+    ->select("*")
+    ->from('organizations')
+    ->get()
+    ->fetchData()
+    ->closeConnection();*/
+
+
+//List 10 organization whose id is greater than 10
+//List Organization whose id is greater than 10 and less than equal to 50
+//LIst all organization who has bee created after 2013-02-10 00:00:00
+//List all orders who has id between 10 to 50 and its orders should be descending by name
+
+
+
+
+
+
+//display informations about organization whose id is 70
+/*$obj->makeConnection()
+    ->select("*")
+    ->from("organizations")
+    ->where(array('id'=>'70'))
+    ->get()
+    ->fetchData()
+    ->closeConnection();*/
+
+
+//display informations about organization whose name is "Org Name 30"
+/*$obj->makeConnection()
+    ->select("*")
+    ->from("organizations")
+    ->where(array('name'=>'Org Name 30'))
+    ->get()
+    ->fetchData()
+    ->closeConnection();*/
+
+
+//display all the users of organization_id 30
+//return a count of users per organization with organization name
+
+
+
+//update users table fname = 'abc' and lname = 'xyz' of user whose id is 20
+/*$obj->makeConnection()
+    ->save("users", array('fname' => 'abc', 'lname' => 'xyz'), array('id' => 20))
+    ->closeConnection();*/
+
+
+
+//delete all users who lives in city "City7"
+/*$obj->makeConnection()
+    ->delete("users",array('city' => 'city5'))
+    ->closeConnection();*/
+
 
 
 
