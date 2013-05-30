@@ -2,6 +2,7 @@
 
 class MyDBClass {
 
+
     private static $instance;
     private $dbh;
     private $select;
@@ -30,7 +31,10 @@ class MyDBClass {
 
         try {
             $this->dbh = new PDO("mysql:host=$hostname;dbname=test", $username, $password);
-                        echo 'Connected to database<br />';
+            echo 'Connected to database<br />';
+
+            $this->dbh->setAttribute(PDO::ATTR_ERRMODE, PDO::ERRMODE_EXCEPTION);
+
         } catch (PDOException $e) {
             echo $e->getMessage();
         }
@@ -41,14 +45,15 @@ class MyDBClass {
 
     function closeConnection() {
         $this->dbh = null;
-                echo "Connection closed<br />";
+        echo "Connection closed<br />";
     }
 
     function select($selectParameters) {
 
         if (empty($selectParameters) || $selectParameters == NULL) {
-
-            $this->select = "*";
+            $this->select = "select *";
+        } else {
+            $this->select = "select ".$selectParameters;
         }
 
         return $this;
@@ -56,40 +61,50 @@ class MyDBClass {
 
     function from($tableName) {
 
-        $this->from=$tableName;
+        if(!empty($tableName)){
 
-        return $this;
-    }
+            $this->from = "from ".$tableName;
 
-    function where($conditions){
-
-        $wherecondition =NULL;
-
-        foreach($conditions as $key=>$condition){
-
-            $wherecondition =  $wherecondition." ".$key ."='".$condition."' AND ";
+        }else{
+            echo "please give table name";
+            die();
         }
 
-        $this->where= substr($wherecondition, 0, -4);
+        return $this;
+    }
 
-        return  $this;
+    function where($conditions) {
+
+        $wherecondition = NULL;
+
+        if(!empty($conditions)){
+
+            foreach ($conditions as $key => $condition) {
+
+                $wherecondition = $wherecondition . " " . $key . "='" . $condition . "' AND ";
+            }
+
+            $this->where = "where ".substr($wherecondition, 0, -4);
+        }
+
+        return $this;
     }
 
 
-    function get(){
+    function get() {
 
-        $this->query =  "select " . $this->select . " from " . $this->from ." where ".$this->where. ";";
+        $this->query = $this->select . " " . $this->from . " " . $this->where . ";";
         return $this;
 
     }
 
-    function query(){
+    function query() {
 
-     return $this;
+        return $this;
 
     }
 
-    function fetchdata() {
+    function fetchData() {
 
         $sth = $this->dbh->prepare($this->query);
         $sth->execute();
@@ -100,10 +115,18 @@ class MyDBClass {
 
             foreach ($results as $result) {
 
-                if(isset($result['organisation_id'])){echo $result['organisation_id']." ";}
-                if(isset($result['fname'])){echo  $result['fname']."    ";}
-                if(isset($result['lname'])){echo $result['lname']." ";}
-                if(isset($result['city'])){echo $result['city']."   ";}
+                if (isset($result['organisation_id'])) {
+                    echo $result['organisation_id'] . " ";
+                }
+                if (isset($result['fname'])) {
+                    echo  $result['fname'] . "    ";
+                }
+                if (isset($result['lname'])) {
+                    echo $result['lname'] . " ";
+                }
+                if (isset($result['city'])) {
+                    echo $result['city'] . "   ";
+                }
                 echo "<br />";
             }
 
@@ -114,11 +137,11 @@ class MyDBClass {
         return $this;
     }
 
-    function save(){
+    function save() {
 
     }
 
-    function delete(){
+    function delete() {
 
     }
 
@@ -130,9 +153,9 @@ $obj = MyDBClass::getInstance();
 $obj->makeConnection()
     ->select("*")
     ->from("users")
-    ->where(array('fname'=>'fname9','city'=>'City3'))
+    ->where("")
     ->get()
-    ->fetchdata()
+    ->fetchData()
     ->closeConnection();
 
 
