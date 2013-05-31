@@ -222,8 +222,8 @@ class MyDBClass {
 $obj = MyDBClass::getInstance();
 
 /*$obj->makeConnection()
-    ->select("*")
-    ->from("users")
+    ->select("")
+    ->from(array("users"))
     ->where("")
     ->orderBy("fname", "DESC")
     ->limit(10)
@@ -245,8 +245,8 @@ $obj = MyDBClass::getInstance();
 
 //List all organizations
 /*$obj->makeConnection()
-    ->select("*")
-    ->from('organizations')
+    ->select("")
+    ->from(array('organizations'))
     ->get()
     ->fetchData()
     ->closeConnection();*/
@@ -254,8 +254,8 @@ $obj = MyDBClass::getInstance();
 
 //List 10 organization whose id is greater than 10
 /*$obj->makeConnection()
-    ->select("*")
-    ->from("organizations")
+    ->select("")
+    ->from(array("organizations"))
     ->where(array('id >'=>11))
     ->limit(10)
     ->get()
@@ -265,8 +265,8 @@ $obj = MyDBClass::getInstance();
 
 //List Organization whose id is greater than 10 and less than equal to 50
 /*$obj->makeConnection()
-    ->select("*")
-    ->from("organizations")
+    ->select("")
+    ->from(array("organizations"))
     ->where(array('id >'=>11,'id <'=>50))
     ->get()
     ->fetchData()
@@ -275,7 +275,7 @@ $obj = MyDBClass::getInstance();
 //LIst all organization who has bee created after 2013-02-10 00:00:00
 /*$obj->makeConnection()
     ->select("*")
-    ->from("organizations")
+    ->from(array("organizations"))
     ->where(array('created_on >'=>'2013-02-10 00:00:00'))
     ->get()
     ->fetchData()
@@ -283,8 +283,8 @@ $obj = MyDBClass::getInstance();
 
 //List all orders who has id between 10 to 50 and its orders should be descending by name
 /*$obj->makeConnection()
-    ->select("*")
-    ->from("organizations")
+    ->select("")
+    ->from(array("organizations"))
     ->where(array('id >'=>10,'id <'=>50))
     ->orderBy("name", "DESC")
     ->get()
@@ -294,8 +294,8 @@ $obj = MyDBClass::getInstance();
 
 //display informations about organization whose id is 70
 /*$obj->makeConnection()
-    ->select("*")
-    ->from("organizations")
+    ->select("")
+    ->from(array("organizations"))
     ->where(array('id'=>'70'))
     ->get()
     ->fetchData()
@@ -304,8 +304,8 @@ $obj = MyDBClass::getInstance();
 
 //display informations about organization whose name is "Org Name 30"
 /*$obj->makeConnection()
-    ->select("*")
-    ->from("organizations")
+    ->select("")
+    ->from(array("organizations"))
     ->where(array('name'=>'Org Name 30'))
     ->get()
     ->fetchData()
@@ -314,8 +314,8 @@ $obj = MyDBClass::getInstance();
 
 //display all the users of organization_id 30
 /*$obj->makeConnection()
-    ->select("*")
-    ->from("users")
+    ->select("")
+    ->from(array("users"))
     ->where(array("organisation_id"=>30))
     ->get()
     ->fetchData()
