@@ -241,10 +241,10 @@ $obj = MyDBClass::getInstance();
     ->delete("users",array('fname' => 'fname500', 'lname' => 'lname500'))
     ->closeConnection();*/
 
-$obj->makeConnection()
+/*$obj->makeConnection()
     ->getQuery("select fname from users;")
     ->fetchData()
-    ->closeConnection();
+    ->closeConnection();*/
 
 //test cases
 
@@ -327,14 +327,14 @@ $obj->makeConnection()
     ->closeConnection();*/
 
 //return a count of users per organization with organization name
-/*$obj->makeConnection()
+$obj->makeConnection()
     ->select(array("organizations.name", "COUNT(users.id)"))
     ->from(array("organizations", "users"))
     ->join(array("users.organisation_id" => "organizations.id"))
     ->groupBy("organizations.name")
     ->get()
     ->fetchData()
-    ->closeConnection();*/
+    ->closeConnection();
 
 
 //update users table fname = 'abc' and lname = 'xyz' of user whose id is 20
