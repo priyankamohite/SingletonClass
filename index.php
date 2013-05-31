@@ -9,6 +9,7 @@ class MyDBClass {
     private $where;
     private $limit;
     private $orderBy;
+    private $groupBy;
     private $query;
 
     private function __construct() {
@@ -30,9 +31,6 @@ class MyDBClass {
         try {
             $this->dbh = new PDO("mysql:host=$hostname;dbname=test", $username, $password);
             echo 'Connected to database<br />';
-
-            $this->dbh->setAttribute(PDO::ATTR_ERRMODE, PDO::ERRMODE_EXCEPTION);
-
         } catch (PDOException $e) {
             echo $e->getMessage();
         }
@@ -50,19 +48,25 @@ class MyDBClass {
         if (empty($selectParameters) || $selectParameters == NULL) {
             $this->select = "select *";
         } else {
-            $this->select = "select " . $selectParameters;
-        }
+            $this->select = "select ";
 
+            foreach ($selectParameters as $selectParameter) {
+                $this->select = $this->select . $selectParameter . " ,";
+            }
+            $this->select = substr($this->select, 0, -1);
+        }
         return $this;
     }
 
-    function from($tableName) {
+    function from($tableNames) {
 
-        if (!empty($tableName)) {
-            $this->from = "from " . $tableName;
-        } else {
-            echo "please give table name";
-            die();
+        if (!empty($tableNames)) {
+            $this->from = "from ";
+
+            foreach ($tableNames as $tableName) {
+                $this->from = $this->from . $tableName . " ,";
+            }
+            $this->from = substr($this->from, 0, -1);
         }
         return $this;
     }
@@ -78,9 +82,6 @@ class MyDBClass {
 
             $this->where = "where " . substr($wherecondition, 0, -4);
         }
-
-        //        echo  $this->where;
-        //        die();
         return $this;
     }
 
@@ -100,18 +101,35 @@ class MyDBClass {
         return $this;
     }
 
+    function join($conditions){
 
-    function get() {
+        if (!empty($conditions)) {
+             $this->where = "where ";
+            foreach ($conditions as $key => $condition) {
+                $this->where = $this->where. $key . "=" . $condition;
+            }
 
-        $this->query = $this->select . " " . $this->from . " " . $this->where . " " . $this->orderBy . " " . $this->limit . ";";
+        }
         return $this;
 
     }
 
-    function query() {
+    function groupBy($groupByField) {
 
+        if (isset($groupByField)) {
+            $this->groupBy = "GROUP BY " . $groupByField;
+        }
         return $this;
+    }
 
+
+    function get() {
+        $this->query = $this->select . " " . $this->from . " " . $this->where . " " . $this->orderBy . " " . $this->limit . " " . $this->groupBy . ";";
+        return $this;
+    }
+
+    function query() {
+        return $this;
     }
 
     function fetchData() {
@@ -137,7 +155,6 @@ class MyDBClass {
         } else {
             echo "data not found";
         }
-
         return $this;
     }
 
@@ -198,14 +215,6 @@ class MyDBClass {
         $sth->execute();
 
         return $this;
-    }
-
-    function join() {
-        /*SELECT users . fname,organizations . id
-         FROM users
-         INNER JOIN organizations
-         ON users . organisation_id = organizations . id
-         AND organizations . id = 30;*/
     }
 
 }
@@ -304,7 +313,23 @@ $obj = MyDBClass::getInstance();
 
 
 //display all the users of organization_id 30
+/*$obj->makeConnection()
+    ->select("*")
+    ->from("users")
+    ->where(array("organisation_id"=>30))
+    ->get()
+    ->fetchData()
+    ->closeConnection();*/
+
 //return a count of users per organization with organization name
+/*$obj->makeConnection()
+    ->select(array("organizations.name", "COUNT(users.id)"))
+    ->from(array("organizations", "users"))
+    ->join(array("users.organisation_id" => "organizations.id"))
+    ->groupBy("organizations.name")
+    ->get()
+    ->fetchData()
+    ->closeConnection();*/
 
 
 //update users table fname = 'abc' and lname = 'xyz' of user whose id is 20
