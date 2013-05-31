@@ -73,14 +73,12 @@ class MyDBClass {
 
     function where($conditions) {
 
-        $wherecondition = NULL;
         if (!empty($conditions)) {
-
             foreach ($conditions as $key => $condition) {
-                $wherecondition = $wherecondition . " " . $key . "='" . $condition . "' AND ";
-            }
 
-            $this->where = "where " . substr($wherecondition, 0, -4);
+                    $this->where = $this->where . " " . $key . "'" . $condition . "' AND ";
+            }
+            $this->where = "where " . substr($this->where, 0, -4);
         }
         return $this;
     }
@@ -101,12 +99,12 @@ class MyDBClass {
         return $this;
     }
 
-    function join($conditions){
+    function join($conditions) {
 
         if (!empty($conditions)) {
-             $this->where = "where ";
+            $this->where = "where ";
             foreach ($conditions as $key => $condition) {
-                $this->where = $this->where. $key . "=" . $condition;
+                $this->where = $this->where . $key . "=" . $condition;
             }
 
         }
@@ -122,13 +120,16 @@ class MyDBClass {
         return $this;
     }
 
-
     function get() {
         $this->query = $this->select . " " . $this->from . " " . $this->where . " " . $this->orderBy . " " . $this->limit . " " . $this->groupBy . ";";
         return $this;
     }
 
-    function query() {
+    function getQuery($queryStatement) {
+
+        if(!empty($queryStatement)){
+            $this->query = $queryStatement;
+        }
         return $this;
     }
 
@@ -240,6 +241,10 @@ $obj = MyDBClass::getInstance();
     ->delete("users",array('fname' => 'fname500', 'lname' => 'lname500'))
     ->closeConnection();*/
 
+$obj->makeConnection()
+    ->getQuery("select fname from users;")
+    ->fetchData()
+    ->closeConnection();
 
 //test cases
 
@@ -256,7 +261,7 @@ $obj = MyDBClass::getInstance();
 /*$obj->makeConnection()
     ->select("")
     ->from(array("organizations"))
-    ->where(array('id >'=>11))
+    ->where(array('id >'=>10))
     ->limit(10)
     ->get()
     ->fetchData()
@@ -267,14 +272,14 @@ $obj = MyDBClass::getInstance();
 /*$obj->makeConnection()
     ->select("")
     ->from(array("organizations"))
-    ->where(array('id >'=>11,'id <'=>50))
+    ->where(array('id >'=>10,'id <='=>50))
     ->get()
     ->fetchData()
     ->closeConnection();*/
 
 //LIst all organization who has bee created after 2013-02-10 00:00:00
 /*$obj->makeConnection()
-    ->select("*")
+    ->select("")
     ->from(array("organizations"))
     ->where(array('created_on >'=>'2013-02-10 00:00:00'))
     ->get()
@@ -296,7 +301,7 @@ $obj = MyDBClass::getInstance();
 /*$obj->makeConnection()
     ->select("")
     ->from(array("organizations"))
-    ->where(array('id'=>'70'))
+    ->where(array('id='=>'70'))
     ->get()
     ->fetchData()
     ->closeConnection();*/
@@ -306,7 +311,7 @@ $obj = MyDBClass::getInstance();
 /*$obj->makeConnection()
     ->select("")
     ->from(array("organizations"))
-    ->where(array('name'=>'Org Name 30'))
+    ->where(array('name='=>'Org Name 30'))
     ->get()
     ->fetchData()
     ->closeConnection();*/
@@ -316,7 +321,7 @@ $obj = MyDBClass::getInstance();
 /*$obj->makeConnection()
     ->select("")
     ->from(array("users"))
-    ->where(array("organisation_id"=>30))
+    ->where(array("organisation_id="=>30))
     ->get()
     ->fetchData()
     ->closeConnection();*/
