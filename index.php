@@ -1,5 +1,11 @@
 <?php
 
+$selectValues = $_POST['select'];
+$fromTable = $_POST['from'];
+$whereCond = $_POST['where'];
+$limitOf = $_POST['limit'];
+$orderByCond = $_POST['orderBy'];
+
 class MyDBClass {
 
     private static $instance;
@@ -13,6 +19,12 @@ class MyDBClass {
     private $query;
 
     private function __construct() {
+
+        $this->select = $GLOBALS['selectValues'];
+        $this->from = $GLOBALS['fromTable'];
+        $this->where = $GLOBALS['whereCond'];
+        $this->limit = $GLOBALS['limitOf'];
+        $this->orderBy = $GLOBALS['orderByCond'];
 
     }
 
@@ -30,7 +42,7 @@ class MyDBClass {
 
         try {
             $this->dbh = new PDO("mysql:host=$hostname;dbname=test", $username, $password);
-            echo 'Connected to database<br />';
+            echo 'Connected to database<br /><br /><br /><br />';
         } catch (PDOException $e) {
             echo $e->getMessage();
         }
@@ -40,14 +52,19 @@ class MyDBClass {
 
     function closeConnection() {
         $this->dbh = null;
-        echo "Connection closed<br />";
+        echo "<br /><br /><br />Connection closed<br />";
     }
 
-    function select($selectParameters) {
+    function select() {
 
-        if (empty($selectParameters) || $selectParameters == NULL) {
+
+
+        if (empty($this->select) || $this->select == NULL) {
             $this->select = "select *";
         } else {
+
+            $selectParameters = explode(",", $this->select);
+
             $this->select = "select ";
 
             foreach ($selectParameters as $selectParameter) {
@@ -58,7 +75,9 @@ class MyDBClass {
         return $this;
     }
 
-    function from($tableNames) {
+    function from() {
+
+        $tableNames = explode(",", $this->from);
 
         if (!empty($tableNames)) {
             $this->from = "from ";
@@ -71,14 +90,18 @@ class MyDBClass {
         return $this;
     }
 
-    function where($conditions) {
+    function where() {
 
-        if (!empty($conditions)) {
-            foreach ($conditions as $key => $condition) {
+        if (!empty($this->where)) {
 
-                    $this->where = $this->where . " " . $key . "'" . $condition . "' AND ";
+            $conditions = explode(",", $this->where);
+
+            $whereClause = "";
+            foreach ($conditions as $condition) {
+                $values = explode("=", $condition);
+                $whereClause = $whereClause."".$values[0]."='".$values[1]."' AND ";
             }
-            $this->where = "where " . substr($this->where, 0, -4);
+            $this->where = "where " . substr($whereClause, 0, -4);
         }
         return $this;
     }
@@ -91,10 +114,10 @@ class MyDBClass {
         return $this;
     }
 
-    function limit($noOfRows) {
+    function limit() {
 
-        if (!empty($noOfRows)) {
-            $this->limit = "LIMIT " . $noOfRows;
+        if (!empty($this->limit)) {
+            $this->limit = "LIMIT " . $this->limit;
         }
         return $this;
     }
@@ -122,12 +145,15 @@ class MyDBClass {
 
     function get() {
         $this->query = $this->select . " " . $this->from . " " . $this->where . " " . $this->orderBy . " " . $this->limit . " " . $this->groupBy . ";";
+
+        echo $this->query;
+        echo "<br /><br /><br />";
         return $this;
     }
 
     function getQuery($queryStatement) {
 
-        if(!empty($queryStatement)){
+        if (!empty($queryStatement)) {
             $this->query = $queryStatement;
         }
         return $this;
@@ -222,15 +248,15 @@ class MyDBClass {
 
 $obj = MyDBClass::getInstance();
 
-/*$obj->makeConnection()
-    ->select("")
-    ->from(array("users"))
-    ->where("")
-    ->orderBy("fname", "DESC")
-    ->limit(10)
+$obj->makeConnection()
+    ->select()
+    ->from()
+    ->where()
+//    ->orderBy("fname", "DESC")
+    ->limit()
     ->get()
     ->fetchData()
-    ->closeConnection();*/
+    ->closeConnection();
 
 
 /*$obj->makeConnection()
@@ -327,14 +353,14 @@ $obj = MyDBClass::getInstance();
     ->closeConnection();*/
 
 //return a count of users per organization with organization name
-$obj->makeConnection()
+/*$obj->makeConnection()
     ->select(array("organizations.name", "COUNT(users.id)"))
     ->from(array("organizations", "users"))
     ->join(array("users.organisation_id" => "organizations.id"))
     ->groupBy("organizations.name")
     ->get()
     ->fetchData()
-    ->closeConnection();
+    ->closeConnection();*/
 
 
 //update users table fname = 'abc' and lname = 'xyz' of user whose id is 20
