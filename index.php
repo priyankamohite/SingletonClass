@@ -106,10 +106,12 @@ class MyDBClass {
         return $this;
     }
 
-    function orderBy($fieldName, $order) {
+    function orderBy() {
 
-        if (!empty($order) && !empty($fieldName)) {
-            $this->orderBy = "ORDER BY " . $fieldName . " " . $order;
+        $conditions = explode(",", $this->orderBy);
+
+        if (!empty($conditions[0]) && !empty($conditions[1])) {
+            $this->orderBy = "ORDER BY " . $conditions[0] . " " . $conditions[1];
         }
         return $this;
     }
@@ -252,7 +254,7 @@ $obj->makeConnection()
     ->select()
     ->from()
     ->where()
-//    ->orderBy("fname", "DESC")
+    ->orderBy()
     ->limit()
     ->get()
     ->fetchData()
