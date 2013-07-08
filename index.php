@@ -264,7 +264,7 @@ class MyDBClass {
 
 $obj = MyDBClass::getInstance();
 
-/*$obj->makeConnection()
+$obj->makeConnection()
     ->select()
     ->from()
     ->where()
@@ -272,13 +272,13 @@ $obj = MyDBClass::getInstance();
     ->limit()
     ->get()
     ->fetchData()
-    ->closeConnection();*/
-
-
-$obj->makeConnection()
-    ->save()
-//    ->save("users", array('organisation_id' => '111', 'fname' => 'Priya', 'lname' => 'Mohite', 'city' => 'Islampur'), array('fname' => 'Priyanka', 'lname' => 'Mohite'))
     ->closeConnection();
+
+
+//$obj->makeConnection()
+//    ->save()
+////    ->save("users", array('organisation_id' => '111', 'fname' => 'Priya', 'lname' => 'Mohite', 'city' => 'Islampur'), array('fname' => 'Priyanka', 'lname' => 'Mohite'))
+//    ->closeConnection();
 
 /*$obj->makeConnection()
     ->delete("users",array('fname' => 'fname500', 'lname' => 'lname500'))

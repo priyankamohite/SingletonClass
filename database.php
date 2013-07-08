@@ -7,8 +7,11 @@ $dbname = 'test';
 $dbh = new PDO("mysql:host=$hostname;dbname=$dbname", $username, $password);
 echo 'Connected to database<br />';
 
+mysql_select_db("test");
+
 $sql = "SHOW TABLES FROM $dbname";
 $result = mysql_query($sql);
+
 
 while ($rows = mysql_fetch_row($result)) {
 
@@ -22,11 +25,14 @@ while ($rows = mysql_fetch_row($result)) {
           }
       }*/
 
-
-      $query_one = 'DESCRIBE users';
+//
+      $query_one = "DESCRIBE $row";
       $results_one = mysql_query($query_one);
+//
+      print_r( $results_one );
 
       while($row_one = mysql_fetch_array($results_one)) {
+          echo '<pre>';
           print_r($row_one);
           echo '<br />';
       }
