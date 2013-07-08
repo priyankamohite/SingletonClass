@@ -5,6 +5,9 @@ $fromTable = $_POST['from'];
 $whereCond = $_POST['where'];
 $limitOf = $_POST['limit'];
 $orderByCond = $_POST['orderBy'];
+$tableName = $_POST['tableName'];
+$setParameters = $_POST['values'];
+$conditionsToUpdate = $_POST['conditions'];
 
 class MyDBClass {
 
@@ -25,7 +28,6 @@ class MyDBClass {
         $this->where = $GLOBALS['whereCond'];
         $this->limit = $GLOBALS['limitOf'];
         $this->orderBy = $GLOBALS['orderByCond'];
-
     }
 
     public static function getInstance() {
@@ -77,13 +79,13 @@ class MyDBClass {
 
     function from() {
 
-        $tableNames = explode(",", $this->from);
+        $tablesNames = explode(",", $this->from);
 
-        if (!empty($tableNames)) {
+        if (!empty($tablesNames)) {
             $this->from = "from ";
 
-            foreach ($tableNames as $tableName) {
-                $this->from = $this->from . $tableName . " ,";
+            foreach ($tablesNames as $tablesName) {
+                $this->from = $this->from . $tablesName . " ,";
             }
             $this->from = substr($this->from, 0, -1);
         }
@@ -187,20 +189,30 @@ class MyDBClass {
         return $this;
     }
 
-    function save($tableName, $setParameters, $conditions = null) {
+    function save() {
 
-        if ($conditions != null) {
+        $tableName = $GLOBALS['tableName'];
+        $conditionsToUpdate = explode(",", $GLOBALS['conditionsToUpdate']);
+        $setParameters = explode(",", $GLOBALS['setParameters']);
+
+
+        if ($conditionsToUpdate != null) {
 
             $this->query = "UPDATE " . $tableName . " SET ";
 
-            foreach ($setParameters as $key => $setParameter) {
-                $this->query = $this->query . $key . " ='" . $setParameter . "',";
+            if(!empty($setParameters)){
+
+                foreach ($setParameters as $setParameter) {
+                    $values = explode("=", $setParameter);
+                    $this->query = $this->query . $values[0] . " ='" . $values[1] . "',";
+                }
             }
 
             $this->query = substr($this->query, 0, -1) . " WHERE ";
 
-            foreach ($conditions as $key => $condition) {
-                $this->query = $this->query . $key . " ='" . $condition . "' AND ";
+            foreach ($conditionsToUpdate as $conditionToUpdate) {
+                $values = explode("=", $conditionToUpdate);
+                $this->query = $this->query . $values[0] . " ='" . $values[1] . "' AND ";
             }
 
             $this->query = substr($this->query, 0, -4) . " ;";
@@ -208,16 +220,18 @@ class MyDBClass {
         } else {
             $this->query = "INSERT INTO " . $tableName . " (";
 
-            foreach ($setParameters as $key => $setParameter) {
-                $this->query = $this->query . $key . ",";
+            foreach ($setParameters as $setParameter) {
+
+                $values = explode("=", $setParameter);
+                $this->query = $this->query . $values[0] . ",";
             }
 
             $this->query = substr($this->query, 0, -1) . ") VALUES ('";
 
             foreach ($setParameters as $setParameter) {
-                $this->query = $this->query . $setParameter . "','";
+                $values = explode("=", $setParameter);
+                $this->query = $this->query . $values[1] . "','";
             }
-
             $this->query = substr($this->query, 0, -2) . ");";
         }
 
@@ -250,7 +264,7 @@ class MyDBClass {
 
 $obj = MyDBClass::getInstance();
 
-$obj->makeConnection()
+/*$obj->makeConnection()
     ->select()
     ->from()
     ->where()
@@ -258,12 +272,13 @@ $obj->makeConnection()
     ->limit()
     ->get()
     ->fetchData()
-    ->closeConnection();
-
-
-/*$obj->makeConnection()
-    ->save("users", array('organisation_id' => '111', 'fname' => 'Priya', 'lname' => 'Mohite', 'city' => 'Islampur'), array('fname' => 'Priyanka', 'lname' => 'Mohite'))
     ->closeConnection();*/
+
+
+$obj->makeConnection()
+    ->save()
+//    ->save("users", array('organisation_id' => '111', 'fname' => 'Priya', 'lname' => 'Mohite', 'city' => 'Islampur'), array('fname' => 'Priyanka', 'lname' => 'Mohite'))
+    ->closeConnection();
 
 /*$obj->makeConnection()
     ->delete("users",array('fname' => 'fname500', 'lname' => 'lname500'))
