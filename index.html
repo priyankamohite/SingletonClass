@@ -1,37 +1,61 @@
 <html>
-<head></head>
+<head>
+    <script src="jquery-1.8.1.min.js"></script>
+</head>
 <body>
 <form action="index.php" method="post">
-    <table>
-        <tr>
+
+    <input type="radio" name="query" class="selectRadioBtn">Select Query<br>
+    <input type="radio" name="query" class="saveRadioBtn">Save Query<br>
+
+    <table class="tableClass">
+        <tr class="selectQuery">
             <td>Select</td> <td><input type="text" name="select"/></td>
         </tr>
-        <tr>
+        <tr class="selectQuery">
             <td>from</td><td><input type="text" name="from"/></td>
         </tr>
-        <tr>
+        <tr class="selectQuery">
             <td>where</td><td><input type="text" name="where"/></td>
         </tr>
-        <tr>
+        <tr class="selectQuery">
             <td>limit </td><td><input type="text" name="limit"/></td>
         </tr>
-        <tr>
+        <tr class="selectQuery">
             <td> order by </td> <td><input type="text" name="orderBy"/></td>
         </tr>
-        <!--<tr>-->
-            <!--<td>Table name</td> <td><input type="text" name="tableName"/></td>-->
-        <!--</tr>-->
-        <!--<tr>-->
-            <!--<td>Values</td> <td><input type="text" name="values"/></td>-->
-        <!--</tr>-->
-        <!--<tr>-->
-            <!--<td>Conditions(update)</td><td><input type="text" name="conditions"/></td>-->
-        <!--</tr>-->
-        <tr>
+        <tr class="saveQuery">
+            <td>Table name</td> <td><input type="text" name="tableName"/></td>
+        </tr>
+        <tr class="saveQuery">
+            <td>Values</td> <td><input type="text" name="values"/></td>
+        </tr>
+        <tr class="saveQuery">
+            <td>Conditions(update)</td><td><input type="text" name="conditions"/></td>
+        </tr>
+        <tr class="submitBtn">
             <td colspan="2" align='center'><input type="submit" name="submit"/></td>
         </tr>
     </table>
 </form>
 
+
+<script type="text/javascript">
+
+ $(document).ready(function(){
+     $(".tableClass").hide();
+     $(".submitBtn").hide();
+
+     $(".selectRadioBtn").click(function(){
+
+         alert("hi");
+
+         $(".selectQuery").show();
+         $(".submitBtn").show();
+
+     });
+
+ });
+</script>
 </body>
 </html>
